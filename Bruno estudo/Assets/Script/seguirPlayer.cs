@@ -5,10 +5,21 @@ using UnityEngine;
 public class seguirPlayer : MonoBehaviour
 {
 
-    public Transform player;
+    public Transform follow;
+    public Transform lookAt;
 
-    private void FixedUpdate()
+    public float smooth;
+
+    private void Start()
     {
-        transform.position = Vector2.Lerp(transform.position, player.position, 0.1f);
+        //Cursor.visible = false;
+        //Cursor.lockState = CursorLockMode.Locked;
+    }
+
+
+    private void Update()
+    {
+        transform.position = Vector3.Lerp(transform.position, follow.position, smooth * Time.deltaTime);
+        transform.LookAt(lookAt);
     }
 }

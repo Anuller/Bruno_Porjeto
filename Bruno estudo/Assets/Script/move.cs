@@ -28,6 +28,9 @@ public class move : MonoBehaviour
 
     public float maxSlop;
 
+    Vector3 mvtDir;
+    public float maxStepHeight;
+
 
     // Start is called before the first frame update
     void Start()
@@ -49,8 +52,40 @@ public class move : MonoBehaviour
         HandleMovement();
         LimitiVelocity();
         HandleRotation();
+        CheckStairs();
     }
 
+    #region CheckStairs
+    void CheckStairs()
+    {
+        if (isGraund)
+        {
+            Vector3 origin1 = mvtDir * .6f + Vector3.up * (maxStepHeight + .01f);
+            Vector3 origin2 = Quaternion.Euler(0, 35, 0) * origin1;
+            Vector3 origin3 = Quaternion.Euler(0, -35, 0) * origin1;
+
+            RaycastHit hit1, hit2, hit3;
+
+            Physics.Raycast(transform.position + origin1, Vector3.down, out hit1, Mathf.Infinity, ground);
+            Physics.Raycast(transform.position + origin2, Vector3.down, out hit2, Mathf.Infinity, ground);
+            Physics.Raycast(transform.position + origin3, Vector3.down, out hit3, Mathf.Infinity, ground);
+
+            if (hit2.point.y > hit1.point.y)
+            {
+                hit1 = hit2;
+            }
+            if (hit3.point.y > hit1.point.y)
+            {
+                hit1 = hit3;
+            }
+
+            if (hit1.normal == Vector3.up && (hit1.point.y - transform.position.y) > .05f)
+                transform.position += Vector3.up * (hit1.point.y - transform.position.y - .1f);
+        }
+    }
+    #endregion
+
+    #region CheackGrounded
     void CheackGrounded()
     {
         isGraund = Physics.Raycast(transform.position + Vector3.up * .1f, Vector3.down, .5f, ground);
@@ -60,7 +95,9 @@ public class move : MonoBehaviour
             body.useGravity = true;
 
     }
+    #endregion
 
+    #region HandleRotation
     void HandleRotation()
     {
         if ((new Vector2(body.velocity.x, body.velocity.z)).magnitude > .1f)
@@ -70,7 +107,9 @@ public class move : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);
         }
     }
+    #endregion
 
+    #region HandleDrag
     void HandleDrag ()
     {
         if (!isGraund)
@@ -78,7 +117,9 @@ public class move : MonoBehaviour
         else
             body.velocity /= (1 + drag / 100);
     }
+    #endregion
 
+    #region LimitiVelocity
     void LimitiVelocity()
     {
         if (!isGraund)
@@ -99,7 +140,9 @@ public class move : MonoBehaviour
             }
         }
     }
+    #endregion
 
+    #region HandleInput
     void HandleInput()
     {
         if (Input.GetKey(KeyCode.A))
@@ -136,7 +179,9 @@ public class move : MonoBehaviour
         }
 
     }
+    #endregion
 
+    # region HandleMovement
     void HandleMovement()
     {
         
@@ -194,13 +239,14 @@ public class move : MonoBehaviour
         {
             speed = originalSpeed;
         }
+        
 
         void MoveDir(Vector3 moveDir)
         {
             Quaternion dir = Quaternion.Euler(0f, cam.rotation.eulerAngles.y, 0f);
 
             Vector3 planeNormal = Vector3.up;
-
+            mvtDir = (dir * moveDir).normalized;
             if (isGraund)
             {
             if (Physics.Raycast(transform.position + Vector3.up * .1f, Vector3.down, out RaycastHit hit, Mathf.Infinity, ground))
@@ -221,5 +267,5 @@ public class move : MonoBehaviour
         }
 
     }
-
+    #endregion
 }

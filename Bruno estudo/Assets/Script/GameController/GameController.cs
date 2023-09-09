@@ -11,6 +11,7 @@ public class GameController : MonoBehaviour
         telaMorte.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Time.deltaTime = 0;
     }
 
     public void Reset()

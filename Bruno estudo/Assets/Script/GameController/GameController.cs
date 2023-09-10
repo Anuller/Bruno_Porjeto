@@ -11,7 +11,7 @@ public class GameController : MonoBehaviour
         telaMorte.SetActive(true);
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        Time.deltaTime = 0;
+        Time.timeScale = 0f;
     }
 
     public void Reset()
@@ -20,6 +20,7 @@ public class GameController : MonoBehaviour
         SceneManager.LoadScene("GameFase1");
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
     }
 
 }

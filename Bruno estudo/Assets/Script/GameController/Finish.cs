@@ -15,6 +15,7 @@ public class Finish : MonoBehaviour
             Win.SetActive(true);
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
+            Time.timeScale = 0;
             //liga a tela, variavel gameobject que ira ativa aqui
 
         }

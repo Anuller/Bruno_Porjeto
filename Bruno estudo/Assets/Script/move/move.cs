@@ -44,7 +44,7 @@ public class move : MonoBehaviour
     {
         HandleInput();
         HandleDrag();
-        CheackGrounded();
+        CheackGrounded2();
     }
 
     void FixedUpdate()
@@ -95,6 +95,29 @@ public class move : MonoBehaviour
             body.useGravity = true;
 
     }
+
+    void CheackGrounded2()
+    {
+        RaycastHit hit;
+        if (Physics.Raycast(transform.position + Vector3.up * .1f, Vector3.down, out hit, Mathf.Infinity, ground))
+        {
+            float slopeAngle = Mathf.Deg2Rad * Vector3.Angle(Vector3.up, hit.normal);
+            float sec = 1/Mathf.Cos(slopeAngle);
+            float yDiff = .5f * sec - .5f;
+            if ((transform.position.y - yDiff) - hit.point.y < .05f)
+            {
+                if (Vector3.Angle(Vector3.up, hit.normal) <= maxSlop)
+                {
+                    isGraund = true;
+                    body.useGravity = false;
+                    return;
+                }
+                body.AddForce(Vector3.down * 300f);
+            }
+        }
+        isGraund = false;
+        body.useGravity = true;
+    }
     #endregion
 
     #region HandleRotation
@@ -107,6 +130,17 @@ public class move : MonoBehaviour
             transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);
         }
     }
+
+    //void HandleRotation2()
+    //{
+        //Vector3 dir = body.GetAccumulatedForce();
+        //if((new Vector2(dir.x, dir.z)).magnitude > .1f)
+        //{
+           // Vector3 horizontalDir = new Vector3(body.velocity.x, 0, body.velocity.z);
+            //Quaternion rotation = Quaternion.LookRotation(horizontalDir, Vector3.up);
+           // transform.rotation = Quaternion.RotateTowards(transform.rotation, rotation, rotationSpeed);
+       // }
+   // }
     #endregion
 
     #region HandleDrag
@@ -256,11 +290,6 @@ public class move : MonoBehaviour
             }
 
             Vector3 force = Vector3.ProjectOnPlane(dir * moveDir, planeNormal) * speed;
-
-            if(Vector3.Angle(Vector3.up, planeNormal) > maxSlop)
-            {
-                body.AddForce(Vector3.down * 300f);
-            }
 
             body.AddForce(force);
             

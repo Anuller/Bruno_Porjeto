@@ -17,7 +17,7 @@ public class GameController : MonoBehaviour
     public void Reset()
     {
         telaMorte.SetActive(false);
-        SceneManager.LoadScene("GameFase1");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         Time.timeScale = 1f;

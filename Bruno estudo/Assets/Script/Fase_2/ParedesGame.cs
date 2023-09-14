@@ -36,10 +36,10 @@ public class ParedesGame : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider collision)
     {
         
-        if (other.gameObject == jogador && paredeVisivel)
+        if (collision.tag == "parede" && jogador)
         {
             Destroy(gameObject); // Destroi a parede, coloca dps para destroir o player 
         }

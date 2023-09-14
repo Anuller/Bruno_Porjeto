@@ -31,6 +31,8 @@ public class move : MonoBehaviour
     Vector3 mvtDir;
     public float maxStepHeight;
 
+    public AudioSource pulo;
+
 
     // Start is called before the first frame update
     void Start()
@@ -198,6 +200,7 @@ public class move : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && isGraund)
         {
+            pulo.Play();
             jump = true;
         }
 
